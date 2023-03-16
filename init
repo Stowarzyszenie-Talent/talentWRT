@@ -1,0 +1,11 @@
+#!/bin/sh
+echo -n "Numer STka: "
+read numer
+config=$(sed "s/\${NUMER}/$numer/" talentwrt-diff)
+#echo "$config"
+ssh -tt -oUserKnownHostsFile=tmphosts -o"StrictHostKeyChecking no" root@192.168.1.1 "
+rm /etc/rc.d/*odhcp* /etc/rc.d/*dnsmasq* -f &&
+echo '$config' | uci batch  &&
+passwd &&
+poweroff"
+rm tmphosts
