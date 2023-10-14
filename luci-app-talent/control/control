@@ -1,0 +1,12 @@
+Package: luci-app-talent
+Version: 420
+Depends: luci-compat lua-sha2
+Source: nofuckingidea
+SourceName: luci-app-talent
+License: None
+Section: luci
+SourceDateEpoch: 12
+Maintainer: Fishhh
+Architecture: all
+Installed-Size: @PKG_SIZE@
+Description: Talent LuCI application
