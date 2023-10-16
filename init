@@ -1,11 +1,23 @@
-#!/bin/sh
-echo -n "Numer STka: "
-read numer
-config=$(sed "s/\${NUMER}/$numer/" talentwrt-diff)
-#echo "$config"
-ssh -tt -oUserKnownHostsFile=tmphosts -o"StrictHostKeyChecking no" root@192.168.1.1 "
-rm /etc/rc.d/*odhcp* /etc/rc.d/*dnsmasq* -f &&
-echo '$config' | uci batch  &&
-passwd &&
-poweroff"
-rm tmphosts
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\t\n'
+
+cd "$(dirname "$0")"
+cd luci-app-talent
+./build.sh > /dev/null
+cd ..
+
+tmp=$(mktemp -d "/tmp/talentwrt-init-XXXXXX")
+# shellcheck disable=2064
+trap "rm -r $tmp" EXIT
+
+alias _ssh='ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1'
+
+_ssh "if test -e /etc/sussy; then echo 'router already set up'; exit 1; fi" </dev/null
+
+./generate.py "$tmp/script"
+echo "echo 'very' >/etc/sussy;" >>"$tmp/script"
+
+_ssh <"$tmp/script"
+_ssh 'passwd && reboot'

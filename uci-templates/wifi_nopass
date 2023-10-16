@@ -1,0 +1,2 @@
+set wireless.default_radio0.encryption='none'
+set wireless.default_radio1.encryption='none'

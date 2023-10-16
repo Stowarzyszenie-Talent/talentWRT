@@ -1,0 +1,15 @@
+set system.@system[0].hostname='{HOSTNAME}'
+set system.@system[0].zonename='Europe/Warsaw'
+set system.@system[0].timezone='CET-1CEST,M3.5.0,M10.5.0/3'
+
+del system.ntp.enabled
+set system.@system[0].log_proto='udp'
+set system.@system[0].conloglevel='8'
+set system.@system[0].cronloglevel='5'
+
+set uhttpd.main.redirect_https='1'
+
+set uhttpd.defaults.days='{CERT_DAYS}'
+set uhttpd.defaults.country='PL'
+set uhttpd.defaults.state='Lubuskie'
+set uhttpd.defaults.location='Szprotawa'
