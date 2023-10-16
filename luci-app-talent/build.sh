@@ -9,13 +9,7 @@ tmp=$(mktemp -d "/tmp/luci-app-talent-ipkg-XXXXXX")
 trap "rm -r $tmp" EXIT
 
 echo 2.0>"$tmp/debian-binary"
-tar cvf "$tmp/control.tar" -C control --exclude=control .
+tar cvzf "$tmp/control.tar.gz" -C control --owner=0 --group=0 .
+tar cvzf "$tmp/data.tar.gz" -C data --owner=0 --group=0 .
 
-sed "s/@PKG_SIZE@/$(du -s data | awk '{ printf $0 * 1000 }')/g" control/control >"$tmp/control"
-tar rvf "$tmp/control.tar" -C "$tmp" control --owner=0 --group=0
-rm "$tmp/control"
-gzip "$tmp/control.tar"
-
-tar cvzf "$tmp/data.tar.gz" -C data .
-
-tar cvzf "luci-app-talent.ipk" -C "$tmp" .
+tar cvzf "luci-app-talent.ipk" -C "$tmp" --owner=0 --group=0 .

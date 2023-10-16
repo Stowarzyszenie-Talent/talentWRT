@@ -1,0 +1,4 @@
+set wireless.default_radio0.encryption='sae-mixed'
+set wireless.default_radio0.key='{PASSWORD}'
+set wireless.default_radio1.encryption='sae-mixed'
+set wireless.default_radio1.key='{PASSWORD}'
