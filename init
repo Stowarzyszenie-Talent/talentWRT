@@ -1,11 +1,21 @@
-#!/bin/sh
-echo -n "Numer STka: "
-read numer
-config=$(sed "s/\${NUMER}/$numer/" talentwrt-diff)
-#echo "$config"
-ssh -tt -oUserKnownHostsFile=tmphosts -o"StrictHostKeyChecking no" root@192.168.1.1 "
-rm /etc/rc.d/*odhcp* /etc/rc.d/*dnsmasq* -f &&
-echo '$config' | uci batch  &&
-passwd &&
-poweroff"
-rm tmphosts
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\t\n'
+
+cd "$(dirname "$0")"
+
+tmp=$(mktemp -d "/tmp/talentwrt-init-XXXXXX")
+# shellcheck disable=2064
+trap "rm -r $tmp" EXIT
+
+# przeniosłem to tutaj po wklepaniu calego ./generate i zobaczeniu że nie usunąłem sussy 2137 razy
+# jeśli nie podoba ci się to dodatkowe połączenie to można to prependować do "$tmp/script"
+ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1 "if test -e /etc/sussy; then echo 'router already set up'; exit 1; fi" </dev/null
+
+./generate.py "$tmp/script"
+echo "echo 'very' >/etc/sussy;" >>"$tmp/script"
+echo reboot >>"$tmp/script"
+
+ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1 passwd
+ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1 <"$tmp/script"
