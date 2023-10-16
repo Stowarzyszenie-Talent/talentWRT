@@ -1,0 +1,55 @@
+set network.wan.proto='static'
+set network.wan.ipaddr='{WANIP}'
+set network.wan.netmask='{WANMASK}'
+set network.wan.gateway='{WANGATEWAY}'
+set system.ntp.enable_server='1'
+delete dhcp.@dnsmasq[0].server
+add_list dhcp.@dnsmasq[0].server="1.1.1.1"
+
+set talent.rule1=firewall_rule
+set talent.rule1.rule='Block all'
+set talent.key=key
+set talent.key.key={TALENTKEY}
+
+set firewall.wanhttps=rule
+set firewall.wanhttps.name='Allow https on wan'
+set firewall.wanhttps.src='wan'
+set firewall.wanhttps.proto='tcp'
+set firewall.wanhttps.dest_ip='{WANIP}'
+set firewall.wanhttps.dest_port='443'
+set firewall.wanhttps.target='ACCEPT'
+
+set firewall.wanssh=rule
+set firewall.wanssh.name='Allow ssh on wan'
+set firewall.wanssh.src='wan'
+set firewall.wanssh.proto='tcp'
+set firewall.wanssh.dest_ip='{WANIP}'
+set firewall.wanssh.dest_port='22'
+set firewall.wanssh.target='ACCEPT'
+
+set firewall.impostor420=rule
+set firewall.impostor420.name='Allow local network'
+set firewall.impostor420.src='lan'
+set firewall.impostor420.dest='wan'
+set firewall.impostor420.dest_ip='10.0.0.0/8'
+set firewall.impostor420.target='ACCEPT'
+
+set firewall.sus690=rule
+set firewall.sus690.name='Allow Wyzwania, buz.info.pl and lo3.gdynia.pl'
+set firewall.sus690.src='lan'
+set firewall.sus690.dest='wan'
+set firewall.sus690.target='ACCEPT'
+add_list firewall.sus690.dest_ip='195.201.46.207'
+add_list firewall.sus690.dest_ip='195.164.224.189'
+
+set firewall.amogus69=rule
+set firewall.amogus69.name='Block all'
+set firewall.amogus69.src='lan'
+set firewall.amogus69.dest='wan'
+set firewall.amogus69.target='REJECT'
+
+reorder firewall.wanhttps=-60
+reorder firewall.wanssh=-50
+reorder firewall.impostor420=60
+reorder firewall.sus690=70
+reorder firewall.amogus69=80

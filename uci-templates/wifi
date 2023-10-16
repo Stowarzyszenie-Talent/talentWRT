@@ -1,0 +1,11 @@
+delete wireless.radio0.disabled
+set wireless.radio0.htmode='{PASMO24}'
+set wireless.radio0.country='PL'
+set wireless.default_radio0.mode='ap'
+set wireless.default_radio0.ssid='{SSID}'
+
+delete wireless.radio1.disabled
+set wireless.radio1.country='PL'
+set wireless.radio1.htmode='{PASMO5}'
+set wireless.default_radio1.mode='ap'
+set wireless.default_radio1.ssid='{SSID}-5GHz'
