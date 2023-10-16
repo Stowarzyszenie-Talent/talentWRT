@@ -7,9 +7,7 @@ set network.lan.ipaddr='10.{NUMER}.0.1'
 set network.lan.netmask='255.0.0.0'
 set network.lan.dns='10.0.0.1'
 set network.lan.delegate='0'
+set dhcp.lan.ignore=1
 
 del system.ntp.server
-add_list system.ntp.server='10.0.0.1
-
-network.lan.dns='10.0.0.1'
-dhcp.lan.ignore=1
+add_list system.ntp.server='10.0.0.1'
