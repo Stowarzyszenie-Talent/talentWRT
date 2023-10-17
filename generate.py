@@ -257,4 +257,5 @@ if kind == "LO3":
     output.write("opkg install /tmp/luci-app-talent.ipk\n")
     output.write("rm /tmp/luci-app-talent.ipk\n")
 
+output.write("touch /etc/config/talent\n")
 output.write(f"echo -n {shlex.quote(uci_config)} | uci batch\n")
