@@ -18,6 +18,9 @@ ns = parser.parse_args()
 
 os.chdir(Path(__file__).parent)
 
+CT = TypeVar("CT", covariant=True)
+T = TypeVar("T")
+
 
 def check_ipv4(input: str) -> bool:
     match = re.match("^(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)$", input)
@@ -36,10 +39,6 @@ def check_ipv4(input: str) -> bool:
         return False
 
     return True
-
-
-CT = TypeVar("CT", covariant=True)
-T = TypeVar("T")
 
 
 class QueryType(Generic[CT], ABC):
@@ -179,7 +178,7 @@ channelwidth24 = query(
 channelwidth5 = query(
     "Szerokość pasma 5GHz", OneOf(["HT20", "HT40", "VHT80"]), default="HT40"
 )
- 
+
 uci_config += substitute(
     "./uci-templates/wifi",
     {
