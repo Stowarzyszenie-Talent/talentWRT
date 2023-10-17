@@ -171,7 +171,7 @@ else:
         error("Nazwa routera nie może być pusta")
 
 
-uci_config += substitute("./uci-templates/system", {"HOSTNAME": hostname})
+uci_config = substitute("./uci-templates/system", {"HOSTNAME": hostname})
 
 channelwidth24 = query(
     "Szerokość pasma 2.4GHz", OneOf(["HT20", "HT40"]), default="HT20"

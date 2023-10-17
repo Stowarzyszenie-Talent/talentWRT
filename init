@@ -4,6 +4,9 @@ set -euo pipefail
 IFS=$'\t\n'
 
 cd "$(dirname "$0")"
+cd luci-app-talent
+./build.sh > /dev/null
+cd ..
 
 tmp=$(mktemp -d "/tmp/talentwrt-init-XXXXXX")
 # shellcheck disable=2064
@@ -15,7 +18,6 @@ ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.
 
 ./generate.py "$tmp/script"
 echo "echo 'very' >/etc/sussy;" >>"$tmp/script"
-echo reboot >>"$tmp/script"
 
-ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1 passwd
 ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1 <"$tmp/script"
+ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1 'passwd && reboot'
