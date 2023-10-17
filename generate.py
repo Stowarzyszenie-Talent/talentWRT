@@ -148,9 +148,7 @@ channelwidth5 = query("Szerokość pasma 5GHz", OneOf(["HT20", "HT40", "VHT80"])
 
 uci_config = ""
 
-uci_config += substitute("./uci-templates/system", {
-	"HOSTNAME": hostname
-})
+uci_config += substitute("./uci-templates/system", {"HOSTNAME": hostname })
 
 uci_config += substitute("./uci-templates/wifi", {
 	"SSID": hostname,
@@ -217,9 +215,7 @@ output.write("set -euo pipefail\n")
 if kind == "LO3":
 	output.write(f"echo -en {quote_for_echo(LUCI_APP_TALENT.read_bytes())} >/tmp/luci-app-talent.ipk\n")
 	output.write("opkg update\n")
-	# FIXME: Greatest dependency resolver: *doesn't resolve*
-	output.write("opkg install luci-compat lua-sha2 /tmp/luci-app-talent.ipk\n")
+	output.write("opkg install /tmp/luci-app-talent.ipk\n")
 	output.write("rm /tmp/luci-app-talent.ipk\n")
 
-output.write("touch /etc/config/talent\n")
 output.write(f"echo -n {shlex.quote(uci_config)} | uci batch\n")
