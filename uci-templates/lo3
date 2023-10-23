@@ -3,17 +3,14 @@ set network.wan.ipaddr='{WANIP}'
 set network.wan.netmask='{WANMASK}'
 set network.wan.gateway='{WANGATEWAY}'
 set system.ntp.enable_server='1'
+delete dhcp.@dnsmasq[0].server
+add_list dhcp.@dnsmasq[0].server="1.1.1.1"
 
 set talent.rule1=firewall_rule
 set talent.rule1.rule='Block all'
 set talent.key=key
 set talent.key.key={TALENTKEY}
 
-set firewall.amogus69=rule
-set firewall.amogus69.name='Block all'
-set firewall.amogus69.src='lan'
-set firewall.amogus69.dest='wan'
-set firewall.amogus69.target='REJECT'
 set firewall.impostor420=rule
 set firewall.impostor420.name='Allow local network'
 set firewall.impostor420.src='lan'
@@ -26,3 +23,11 @@ set firewall.sus690.src='lan'
 set firewall.sus690.dest='wan'
 set firewall.sus690.dest_ip='195.201.46.207'
 set firewall.sus690.target='ACCEPT'
+set firewall.amogus69=rule
+set firewall.amogus69.name='Block all'
+set firewall.amogus69.src='lan'
+set firewall.amogus69.dest='wan'
+set firewall.amogus69.target='REJECT'
+reorder firewall.impostor420=60
+reorder firewall.sus690=70
+reorder firewall.amogus69=80
