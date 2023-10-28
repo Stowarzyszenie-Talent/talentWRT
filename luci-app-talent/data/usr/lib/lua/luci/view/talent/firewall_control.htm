@@ -1,8 +1,11 @@
 <%+header%>
 
 <script>
+    if(document.location.protocol != "https:")
+        document.location.protocol = "https:";
+
 	const params = new URLSearchParams(window.location.search)
-	if (params.get('szumode'))
+	if (params.get('simple'))
 		document.addEventListener("DOMContentLoaded", () => {
 			for (e of document.querySelectorAll("header")) e.style.display = "none"
 			for (e of document.querySelectorAll("footer")) e.style.display = "none"
@@ -116,7 +119,7 @@
 		let enableButton = el.getElementsByClassName("enable-button")[0]
 
 		async function updateState() {
-			let state = await getFirewallState(router.address)
+			let state = await getFirewallState(address)
 			switch (state) {
 				case "enabled":
 					statusElement.textContent = "Włączona";
