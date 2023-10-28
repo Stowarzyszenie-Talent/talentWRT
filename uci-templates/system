@@ -1,3 +1,8 @@
 set system.@system[0].hostname='{HOSTNAME}'
 set system.@system[0].zonename='Europe/Warsaw'
 set system.@system[0].timezone='CET-1CEST,M3.5.0,M10.5.0/3'
+
+del system.ntp.enabled
+uci set system.@system[0].log_proto='udp'
+uci set system.@system[0].conloglevel='8'
+uci set system.@system[0].cronloglevel='5'
