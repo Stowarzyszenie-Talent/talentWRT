@@ -5,7 +5,7 @@
         document.location.protocol = "https:";
 
 	const params = new URLSearchParams(window.location.search)
-	if (params.get('szumode'))
+	if (params.get('simple'))
 		document.addEventListener("DOMContentLoaded", () => {
 			for (e of document.querySelectorAll("header")) e.style.display = "none"
 			for (e of document.querySelectorAll("footer")) e.style.display = "none"
