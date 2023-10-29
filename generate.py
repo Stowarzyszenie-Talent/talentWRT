@@ -5,6 +5,7 @@ import string
 from abc import ABC, abstractmethod
 from typing import Generic, TextIO, TypeVar
 from dataclasses import dataclass, field
+from datetime import date
 from pathlib import Path
 import re
 import shlex
@@ -169,8 +170,10 @@ else:
     while (hostname := query("Nazwa", UciSafeString())) == "":
         error("Nazwa routera nie może być pusta")
 
-
-uci_config = substitute("./uci-templates/system", {"HOSTNAME": hostname})
+uci_config = substitute("./uci-templates/system", {
+    "HOSTNAME": hostname,
+    "CERT_DAYS": (date(9999, 1, 1) - date.today()).days,
+})
 
 channelwidth24 = query(
     "Szerokość pasma 2.4GHz", OneOf(["HT20", "HT40"]), default="HT20"
@@ -258,4 +261,6 @@ if kind == "LO3":
     output.write("rm /tmp/luci-app-talent.ipk\n")
 
 output.write("touch /etc/config/talent\n")
+# We need to delete the cert for it to be recreated with our new defaults
+output.write("rm -f /etc/uhttpd.crt\n")
 output.write(f"echo -n {shlex.quote(uci_config)} | uci batch\n")

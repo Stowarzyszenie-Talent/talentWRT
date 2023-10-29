@@ -8,3 +8,8 @@ set system.@system[0].conloglevel='8'
 set system.@system[0].cronloglevel='5'
 
 set uhttpd.main.redirect_https='1'
+
+set uhttpd.defaults.days='{CERT_DAYS}'
+set uhttpd.defaults.country='PL'
+set uhttpd.defaults.state='Lubuskie'
+set uhttpd.defaults.location='Szprotawa'
