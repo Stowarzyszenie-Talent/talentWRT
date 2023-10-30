@@ -119,7 +119,7 @@
 		let enableButton = el.getElementsByClassName("enable-button")[0]
 
 		async function updateState() {
-			let state = await getFirewallState(router.address)
+			let state = await getFirewallState(address)
 			switch (state) {
 				case "enabled":
 					statusElement.textContent = "Włączona";

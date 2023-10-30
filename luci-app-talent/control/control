@@ -1,5 +1,5 @@
 Package: luci-app-talent
-Version: 420
+Version: 421
 Depends: luci-compat,lua-sha2
 Source: nofuckingidea
 SourceName: luci-app-talent
