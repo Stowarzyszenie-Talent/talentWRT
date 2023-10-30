@@ -6,3 +6,11 @@ to Stowarzyszenie Talent's TP-link (and maybe Mikrotik) routers, which are meant
 An ``init`` script is provided for applying the template to a fresh (!) openWRT router.
 If a device already has a desired system, but has some leftover configuration, run
 something like ``first-boot && reboot now``.
+
+## Additional setup for lo3
+
+- on computers that is supposed to access the firewall ui, exceptions for
+  self-signed certificates need to be created for **all** routers (visiting
+  the sites and "accepting the risk" is enough).
+- the "central" router needs to be configured to know about other ones in Talent -> settings -> routers
+- all routers need to have the same "talent key", which can be seen in Talent -> settings
