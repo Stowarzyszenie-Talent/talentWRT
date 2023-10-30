@@ -11,6 +11,14 @@ set talent.rule1.rule='Block all'
 set talent.key=key
 set talent.key.key={TALENTKEY}
 
+set firewall.wanhttps=rule
+set firewall.wanhttps.name='Allow https on wan'
+set firewall.wanhttps.src='wan'
+set firewall.wanhttps.proto='tcp'
+set firewall.wanhttps.dest_ip='{WANIP}'
+set firewall.wanhttps.dest_port='443'
+set firewall.wanhttps.target='ACCEPT'
+
 set firewall.impostor420=rule
 set firewall.impostor420.name='Allow local network'
 set firewall.impostor420.src='lan'
@@ -28,6 +36,7 @@ set firewall.amogus69.name='Block all'
 set firewall.amogus69.src='lan'
 set firewall.amogus69.dest='wan'
 set firewall.amogus69.target='REJECT'
+reorder firewall.wanhttps=-60
 reorder firewall.impostor420=60
 reorder firewall.sus690=70
 reorder firewall.amogus69=80
