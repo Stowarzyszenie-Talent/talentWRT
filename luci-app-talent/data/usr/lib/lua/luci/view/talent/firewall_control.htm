@@ -32,6 +32,7 @@
 	.button {
 		padding-left: 5px;
 		padding-right: 5px;
+		color: white;
 	}
 
 	.enable-button {
@@ -44,10 +45,6 @@
 
 	.font24 {
 		font-size: 24pt;
-	}
-
-	.font16 {
-		font-size: 16pt;
 	}
 
 	.error {
@@ -82,7 +79,7 @@
 			<button disabled="true" class="font24 button enable-button">Włącz</button>
 		</div>
 
-		<div class="error font16"></div>
+		<div class="error font24"></div>
 	</div>
 </template>
 
@@ -91,17 +88,16 @@
 	let token
 
 	async function getFirewallState(address) {
+		let ret = null
 		try {
 			let response = (await request.get(`https://${address}/cgi-bin/luci/talent/firewall`, {
 				query: {tt: token}
 			}))
 			if (response.ok)
-				return response.json().data.state
-			else
-				return ""
+				ret = response.json().data.state
 		}
-		catch (e) {
-			return ""
+		finally {
+			return ret
 		}
 	}
 
@@ -114,7 +110,7 @@
 	async function setupRouter(el, {name, address}) {
 		let statusElement = el.getElementsByClassName("status-value")[0]
 		let errorElement = el.getElementsByClassName("error")[0]
-		let disableButton = el.getElementsByClassName("dissable-button")[0]
+		let disableButton = el.getElementsByClassName("disable-button")[0]
 		let enableButton = el.getElementsByClassName("enable-button")[0]
 		let error_state = false
 
@@ -126,6 +122,7 @@
 		async function updateState() {
 			let state = await getFirewallState(address)
 			let has_error = false
+			let errorHTML = "";
 			switch (state) {
 				case "enabled":
 					statusElement.textContent = "Włączona";
@@ -140,18 +137,17 @@
 					statusElement.classList = "status-value fw-disabled"
 					break;
 				default:
-					statusElement.innerHTML = `Nie udało się połączyć z routerem.<br>Proszę wejść w ten <a href="https://${address}/cgi-bin/luci/talent/ping">link</a>, kliknąć "zaawansowane", a potem "Akceptuję ryzyko". Jeżeli nie uda się połączyć z tamtą stroną, to coś się stało z routerem.`;
-					statusElement.classList = "status-value error";
+					statusElement.textContent = "Nieznany";
+					statusElement.classList = "status-value fw-partial";
+					errorHTML = `Nie udało się połączyć z routerem.<br>Proszę wejść w ten <a href="https://${address}/cgi-bin/luci/talent/ping">link</a>, kliknąć "zaawansowane", a potem "Akceptuję ryzyko". Jeżeli nie uda się połączyć z tamtą stroną, to coś się stało z routerem.`;
 					has_error = true
 			}
-			if (has_error && !error_state) {
-				error_state = true;
-				setButtonsDisabled(true)
-			}
-			else if (!has_error && error_state) {
-				error_state = false;
-				setButtonsDisabled(false)
-			}
+			errorElement.innerHTML = errorHTML;
+			// We don't do this unconditionally, as then we could overwrite
+			// the cooldown from setState.
+			if (has_error != error_state)
+				setButtonsDisabled(has_error)
+			error_state = has_error;
 			return state
 		}
 
@@ -162,18 +158,20 @@
 		async function setState(state) {
 			setButtonsDisabled(true)
 
+			// nothing changed
 			if (await updateState() == state) {
 				setButtonsDisabled(false)
 				return
 			}
 
+			// cooldown
 			window.setTimeout(() => setButtonsDisabled(false), 3000)
 
 			try {
 				await setFirewallState(address, state)
 				errorElement.textContent = ""
 			} catch (ex) {
-				errorElement.textContent = "Coś poszło nie tak, proszę odświeżyć stronę i spróbować ponownie za krótką chwilę. Jeśli problem nadal następuje po kilku próbach coś może być zepsute!"
+				errorElement.textContent = "Coś poszło nie tak, proszę odświeżyć stronę i spróbować ponownie za krótką chwilę. Jeśli problem nadal następuje po kilku próbach, to coś może być zepsute!"
 				console.error(ex)
 			}
 
@@ -181,8 +179,8 @@
 		}
 
 		setButtonsDisabled(error_state)
-		el.getElementsByClassName("disable-button")[0].onclick = () => setState("disabled")
-		el.getElementsByClassName("enable-button")[0].onclick = () => setState("enabled")
+		disableButton.onclick = () => setState("disabled")
+		enableButton.onclick = () => setState("enabled")
 	}
 
 	function addRouter({name, address}) {
