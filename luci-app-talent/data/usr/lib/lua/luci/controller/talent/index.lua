@@ -195,10 +195,18 @@ function api:routers()
 	end
 end
 
+function api:ping()
+    luci.http.prepare_content("text/html")
+    luci.http.write("<h1>OK</h1>")
+end
+
 function call_api(fun)
-	luci.http.prepare_content("application/json")
 	luci.http.header("Access-Control-Allow-Origin", "*")
-	luci.http.write_json(api[fun]())
+    local value = api[fun]()
+    if value ~= nil then
+        luci.http.prepare_content("application/json")
+        luci.http.write_json(value)
+    end
 end
 
 function index()
@@ -220,4 +228,5 @@ function index()
 
 	api_entry({ "talent", "firewall" }, "firewall")
 	api_entry({ "talent", "routers" }, "routers")
+	api_entry({ "talent", "ping" }, "ping")
 end

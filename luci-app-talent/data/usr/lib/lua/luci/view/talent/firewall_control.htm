@@ -1,8 +1,8 @@
 <%+header%>
 
 <script>
-    if(document.location.protocol != "https:")
-        document.location.protocol = "https:";
+	if(document.location.protocol != "https:")
+		document.location.protocol = "https:";
 
 	const params = new URLSearchParams(window.location.search)
 	if (params.get('simple'))
@@ -29,24 +29,16 @@
 		color: yellow
 	}
 
-	/* FIXME: Something strange is going on with the text sizing on this page */
-	/*        This is probably caused by LuCI CSS but I am not willing to spend my time debugging it */
-
-	.buttons {
-		margin-top: 10px
+	.button {
+		padding-left: 5px;
+		padding-right: 5px;
 	}
 
 	.enable-button {
-		padding: 1px;
-		padding-left: 5px;
-		padding-right: 5px;
 		background-color: darkgreen;
 	}
 
 	.disable-button {
-		padding: 1px;
-		padding-left: 5px;
-		padding-right: 5px;
 		background-color: darkred;
 	}
 
@@ -62,14 +54,13 @@
 		color: red;
 	}
 
-	.status {
-		margin-bottom: 20px;
+	.name {
+		border-bottom: 1px solid gray;
 	}
 
-	.name {
-		padding-bottom: 16px;
-		border-bottom: 1px solid gray;
-		margin-bottom: 10px;
+	#router-list {
+		margin-top: 15px;
+		line-height: normal;
 	}
 
 	#router-list> :not(:first-child) {
@@ -87,8 +78,8 @@
 		</div>
 
 		<div class="buttons">
-			<button disabled="true" class="font24 disable-button">Wyłącz</button>
-			<button disabled="true" class="font24 enable-button">Włącz</button>
+			<button disabled="true" class="font24 button disable-button">Wyłącz</button>
+			<button disabled="true" class="font24 button enable-button">Włącz</button>
 		</div>
 
 		<div class="error font16"></div>
@@ -100,10 +91,18 @@
 	let token
 
 	async function getFirewallState(address) {
-		let response = (await request.get(`https://${address}/cgi-bin/luci/talent/firewall`, {
-			query: {tt: token}
-		})).json()
-		return response.data.state
+		try {
+			let response = (await request.get(`https://${address}/cgi-bin/luci/talent/firewall`, {
+				query: {tt: token}
+			}))
+			if (response.ok)
+				return response.json().data.state
+			else
+				return ""
+		}
+		catch (e) {
+			return ""
+		}
 	}
 
 	async function setFirewallState(address, state) {
@@ -117,9 +116,16 @@
 		let errorElement = el.getElementsByClassName("error")[0]
 		let disableButton = el.getElementsByClassName("dissable-button")[0]
 		let enableButton = el.getElementsByClassName("enable-button")[0]
+		let error_state = false
+
+		function setButtonsDisabled(disabled) {
+			for (button of el.querySelectorAll("button"))
+				button.disabled = disabled
+		}
 
 		async function updateState() {
 			let state = await getFirewallState(address)
+			let has_error = false
 			switch (state) {
 				case "enabled":
 					statusElement.textContent = "Włączona";
@@ -133,6 +139,18 @@
 					statusElement.textContent = "Wyłączona";
 					statusElement.classList = "status-value fw-disabled"
 					break;
+				default:
+					statusElement.innerHTML = `Nie udało się połączyć z routerem.<br>Proszę wejść w ten <a href="https://${address}/cgi-bin/luci/talent/ping">link</a>, kliknąć "zaawansowane", a potem "Akceptuję ryzyko". Jeżeli nie uda się połączyć z tamtą stroną, to coś się stało z routerem.`;
+					statusElement.classList = "status-value error";
+					has_error = true
+			}
+			if (has_error && !error_state) {
+				error_state = true;
+				setButtonsDisabled(true)
+			}
+			else if (!has_error && error_state) {
+				error_state = false;
+				setButtonsDisabled(false)
 			}
 			return state
 		}
@@ -140,11 +158,6 @@
 		await updateState(address)
 
 		window.setInterval(updateState, 5000)
-
-		function setButtonsDisabled(disabled) {
-			for (button of el.querySelectorAll("button"))
-				button.disabled = disabled
-		}
 
 		async function setState(state) {
 			setButtonsDisabled(true)
@@ -167,7 +180,7 @@
 			await updateState()
 		}
 
-		setButtonsDisabled(false)
+		setButtonsDisabled(error_state)
 		el.getElementsByClassName("disable-button")[0].onclick = () => setState("disabled")
 		el.getElementsByClassName("enable-button")[0].onclick = () => setState("enabled")
 	}
