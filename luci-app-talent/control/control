@@ -1,11 +1,12 @@
 Package: luci-app-talent
-Version: 423
+Version: 424
 Depends: luci-compat,lua-sha2
-Source: nofuckingidea
+Source: https://github.com/Stowarzyszenie-Talent/talentWRT
 SourceName: luci-app-talent
-License: None
+License: GPLv3
 Section: luci
 SourceDateEpoch: 12
 Maintainer: Fishhh
+Uploaders: A-dead-pixel <olaf.targowski@otsrv.net>
 Architecture: all
 Description: Talent LuCI application
