@@ -196,17 +196,18 @@ function api:routers()
 end
 
 function api:ping()
-    luci.http.prepare_content("text/html")
-    luci.http.write("<h1>OK</h1>")
+	luci.http.prepare_content("text/html")
+	luci.http.write("<h1>OK</h1>")
 end
 
 function call_api(fun)
+	-- Cors
 	luci.http.header("Access-Control-Allow-Origin", "*")
-    local value = api[fun]()
-    if value ~= nil then
-        luci.http.prepare_content("application/json")
-        luci.http.write_json(value)
-    end
+	local value = api[fun]()
+	if value ~= nil then
+		luci.http.prepare_content("application/json")
+		luci.http.write_json(value)
+	end
 end
 
 function index()
