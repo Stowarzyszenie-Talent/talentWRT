@@ -260,7 +260,6 @@ if kind == "LO3":
     output.write("opkg install /tmp/luci-app-talent.ipk\n")
     output.write("rm /tmp/luci-app-talent.ipk\n")
 
-output.write("touch /etc/config/talent\n")
 # We need to delete the cert for it to be recreated with our new defaults
 output.write("rm -f /etc/uhttpd.crt\n")
 output.write(f"echo -n {shlex.quote(uci_config)} | uci batch\n")
