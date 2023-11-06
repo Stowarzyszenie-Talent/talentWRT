@@ -139,7 +139,7 @@
 				default:
 					statusElement.textContent = "Nieznany";
 					statusElement.classList = "status-value fw-partial";
-					errorHTML = `Nie udało się połączyć z routerem.<br>Proszę wejść w ten <a href="https://${address}/cgi-bin/luci/talent/ping">link</a>, kliknąć "zaawansowane", a potem "Akceptuję ryzyko". Jeżeli nie uda się połączyć z tamtą stroną, to coś się stało z routerem.`;
+					errorHTML = `Nie udało się połączyć z routerem.<br>Proszę wejść w ten <a href="https://${address}/cgi-bin/luci/talent/ping" target="_blank" rel="noopener noreferrer">link</a>, kliknąć "zaawansowane", a potem "Akceptuję ryzyko". Jeżeli nie uda się połączyć z tamtą stroną, to coś się stało z routerem.`;
 					has_error = true
 			}
 			errorElement.innerHTML = errorHTML;

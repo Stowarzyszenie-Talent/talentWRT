@@ -1,5 +1,5 @@
 Package: luci-app-talent
-Version: 424
+Version: 425
 Depends: luci-compat,lua-sha2
 Source: https://github.com/Stowarzyszenie-Talent/talentWRT
 SourceName: luci-app-talent
