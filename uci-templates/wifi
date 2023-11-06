@@ -1,4 +1,3 @@
-set system.ntp.enabled='0'
 set wireless.radio0.htmode='{PASMO24}'
 set wireless.radio0.country='PL'
 delete wireless.radio0.disabled
