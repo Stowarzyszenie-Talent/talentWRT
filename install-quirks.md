@@ -1,14 +1,15 @@
 ### Tp-linki
 
-##### wdr4300:
- - rev. 1.6: nie wiem jak zflashować bootloaderem, instrukcje z openWRT wiki nie działają.
-   O ile nie zostanie zbrickowany, to można ``sysupgrade``'em flashować.
+##### Generalne wnioski
+Nie jestem pewien poniższego faktu, ale bardzo możliwe iż jest on prawdziwy.
 
- - rev. 1.7: instrukcje z openWRT wiki działają, potrzeba serwera tftp na 192.168.0.66/24
-   serve'ującego image nazwany ``wdr4300v1_tp_recovery.bin``. 
+W zależności od tego, czy na openwrt wiki każą wyciągnąć z factory image'a
+bootloader i dokleić na początek tego z openwrt, albo tftp recovery będzie
+działać po pierwszej instalacji, albo będzie wchodziło do recovery mode'a
+openwrt. Warto patrzeć, czy coś stoi na 192.168.1.1 i na logi serwera tftp.
 
- - jeżeli nie da się wejść w tftp recovery, ale da się w openwrt recovery, to
-   `mtd -r write openwrt*-squashfs-factory.bin firmware`
-
-##### archer C7
- - idk, flashowałem ``sysupgrade``'em
+##### Wchodzenie w recovery mode
+Przeważnie jest to kwestia wciśnięcia na jakąś sekundę przycisku "WPS/reset",
+gdy po reboocie któryś LED na ruterze zaczyna migać, winien wtedy przyspieszyć
+to miganie. Alternatywnie, należy zacząć przytrzymywać na jakieś 10s
+"WPS/reset" zanim ruter się włączy.
