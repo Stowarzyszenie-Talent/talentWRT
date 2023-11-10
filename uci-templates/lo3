@@ -33,18 +33,21 @@ set firewall.impostor420.src='lan'
 set firewall.impostor420.dest='wan'
 set firewall.impostor420.dest_ip='10.0.0.0/8'
 set firewall.impostor420.target='ACCEPT'
+
 set firewall.sus690=rule
 set firewall.sus690.name='Allow Wyzwania, buz.info.pl and lo3.gdynia.pl'
 set firewall.sus690.src='lan'
 set firewall.sus690.dest='wan'
+set firewall.sus690.target='ACCEPT'
 add_list firewall.sus690.dest_ip='195.201.46.207'
 add_list firewall.sus690.dest_ip='195.164.224.189'
-set firewall.sus690.target='ACCEPT'
+
 set firewall.amogus69=rule
 set firewall.amogus69.name='Block all'
 set firewall.amogus69.src='lan'
 set firewall.amogus69.dest='wan'
 set firewall.amogus69.target='REJECT'
+
 reorder firewall.wanhttps=-60
 reorder firewall.wanssh=-50
 reorder firewall.impostor420=60

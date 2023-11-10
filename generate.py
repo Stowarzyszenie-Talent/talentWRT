@@ -256,7 +256,7 @@ if kind == "LO3":
     output.write(
         f"echo -en {quote_for_echo(LUCI_APP_TALENT.read_bytes())} >/tmp/luci-app-talent.ipk\n"
     )
-    output.write("opkg update\n")
+    output.write("opkg update\n") # Fetch package lists 
     output.write("opkg install /tmp/luci-app-talent.ipk\n")
     output.write("rm /tmp/luci-app-talent.ipk\n")
 

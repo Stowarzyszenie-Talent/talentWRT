@@ -12,12 +12,12 @@ tmp=$(mktemp -d "/tmp/talentwrt-init-XXXXXX")
 # shellcheck disable=2064
 trap "rm -r $tmp" EXIT
 
-# przeniosłem to tutaj po wklepaniu calego ./generate i zobaczeniu że nie usunąłem sussy 2137 razy
-# jeśli nie podoba ci się to dodatkowe połączenie to można to prependować do "$tmp/script"
-ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1 "if test -e /etc/sussy; then echo 'router already set up'; exit 1; fi" </dev/null
+alias _ssh='ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1'
+
+_ssh "if test -e /etc/sussy; then echo 'router already set up'; exit 1; fi" </dev/null
 
 ./generate.py "$tmp/script"
 echo "echo 'very' >/etc/sussy;" >>"$tmp/script"
 
-ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1 <"$tmp/script"
-ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1 'passwd && reboot'
+_ssh <"$tmp/script"
+_ssh 'passwd && reboot'
