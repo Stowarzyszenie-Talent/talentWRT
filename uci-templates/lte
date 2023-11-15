@@ -1,0 +1,17 @@
+set network.wwan=interface
+set network.wwan.proto='qmi'
+set network.wwan.device='/dev/cdc-wdm0'
+set network.wwan.auth='both'
+set network.wwan.peerdns='0'
+set network.464xlat=interface
+set network.464xlat.proto='464xlat'
+set network.464xlat.ip6prefix='64:ff9b::/96'
+
+delete firewall.@zone[1].network
+add_list firewall.@zone[1].network='wan'
+add_list firewall.@zone[1].network='wan6'
+add_list firewall.@zone[1].network='wwan'
+add_list firewall.@zone[1].network='464xlat'
+
+add_list dhcp.@dnsmasq[0].server='2606:4700:4700::64'
+add_list dhcp.@dnsmasq[0].server='1.1.1.1'

@@ -159,7 +159,7 @@ def substitute(file: str, values: dict[str, str] = {}) -> str:
 if not LUCI_APP_TALENT.exists():
     error(f"{LUCI_APP_TALENT} does not exist")
 
-kind = query("Typ routera", OneOf(["ST", "LO3"]))
+kind = query("Typ routera", OneOf(["ST", "LO3", "LTE"]))
 hostname: str
 numer_st: int | None = None
 
@@ -175,12 +175,20 @@ uci_config = substitute("./uci-templates/system", {
     "CERT_DAYS": (date(9999, 1, 1) - date.today()).days,
 })
 
+has5ghz = query(
+    "Czy ten router obsługuje pasmo 5GHz?",
+    OneOf(["tak", "nie"]),
+    default="tak",
+) == "tak"
+
 channelwidth24 = query(
     "Szerokość pasma 2.4GHz", OneOf(["HT20", "HT40"]), default="HT20"
 )
-channelwidth5 = query(
-    "Szerokość pasma 5GHz", OneOf(["HT20", "HT40", "VHT80"]), default="HT40"
-)
+channelwidth5 = "HT40"
+if has5ghz:
+    channelwidth5 = query(
+        "Szerokość pasma 5GHz", OneOf(["HT20", "HT40", "VHT80"]), default="HT40"
+    )
 
 uci_config += substitute(
     "./uci-templates/wifi",
@@ -191,7 +199,7 @@ uci_config += substitute(
     },
 )
 
-if kind == "LO3":
+if kind != "ST":
     password = query("Hasło sieci Wi-Fi", WiFiPassword())
 
     if password is None:
@@ -200,7 +208,13 @@ if kind == "LO3":
         uci_config += substitute(
             "./uci-templates/wifi_withpass", {"PASSWORD": password}
         )
+else:
+    assert numer_st is not None
+    uci_config += substitute("./uci-templates/wifi_nopass")
+    uci_config += substitute("./uci-templates/st", {"NUMER": str(numer_st)})
 
+
+if kind == "LO3":
     with query("Ścieżka do pliku z kluczem talent", File()) as f:
         key = shlex.quote(f.read().strip())
 
@@ -221,12 +235,16 @@ if kind == "LO3":
         uci_config += f"set talent.router{i}.name='{name}'\n"
         uci_config += f"set talent.router{i}.ipaddr='{addr}'\n"
         i += 1
-else:
-    assert numer_st is not None
-    uci_config += substitute("./uci-templates/wifi_nopass")
-    uci_config += substitute("./uci-templates/st", {"NUMER": str(numer_st)})
 
-uci_config += "commit"
+if kind == "LTE":
+    uci_config += substitute("./uci-templates/lte")
+
+uci_config += "commit\n"
+
+if not has5ghz:
+    uci_config = "\n".join(
+        l for l in uci_config.splitlines() if not "radio1" in l
+    ) + "\n"
 
 
 # NOTE: This cannot be a drop-in replacement for shlex.quote because *some*
@@ -259,6 +277,12 @@ if kind == "LO3":
     output.write("opkg update\n") # Fetch package lists 
     output.write("opkg install /tmp/luci-app-talent.ipk\n")
     output.write("rm /tmp/luci-app-talent.ipk\n")
+    output.write("touch /etc/config/talent\n")
+
+if kind == "LTE":
+    output.write("opkg update\n")
+    output.write("opkg install luci-proto-qmi 464xlat\n")
+
 
 # We need to delete the cert for it to be recreated with our new defaults
 output.write("rm -f /etc/uhttpd.crt\n")

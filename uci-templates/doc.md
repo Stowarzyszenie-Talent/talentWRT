@@ -23,7 +23,7 @@ would set automatically when one enabled ntp.
 This is the template applied to our routers used on camps, which are meant to
 be simple APs. We disable wan as a precaution against someone plugging a cable
 into the wrong port, disable dhcp, set the appropriate static ip settings
-for our 10.0.0.0/8 network and point the ntp client towards our main server. 
+for our 10.0.0.0/8 network and point the ntp client towards our main server.
 
 #### lo3
 This one is for our routers in III LO in Gdynia, Poland. They aren't so simple
@@ -46,3 +46,19 @@ NOTE: `set talent.key.key={TALENTKEY}`'s lack of quotes is intentional because
 of `shlex.quote`.
 
 TODO: maybe we should use a local DNS server instead?
+
+#### lte
+This one is quite specific, but it probably won't need to be extended, thus
+we can assume we are working on a tp-link tl-mr6400, so with a wwan on qmi.
+Its role is to provide a WAN connection over lte. As some/most carriers only
+give out ipv6 addresses, we need 464xlat (somewhat) and DNS64 (we use
+cloudflare's). The `ip6prefix` in 464xlat's config is for manually specifying
+the well-known ipv4-in-ipv6 subnet for upstream NAT64. Our dns forwarding setup
+*should* work regardless of the isp-provided ip addresses' family. For example,
+when we are ipv6-only, 1.1.1.1 dns won't be reachable for anything more than
+icmp (idk why), so dnsmasq will have to use the ipv6 (DNS64) one.
+
+NOTE: one needs to manually setup the "QMI Cellular" interface with
+ISP-provided information like the APN and auth credentials. Searching
+"${carrier name} APN" usually suffices. As for "ipv4/ipv6/both", it might be
+necessary to just try all of them and see what works.

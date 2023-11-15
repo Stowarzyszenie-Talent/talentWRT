@@ -3,7 +3,6 @@ set network.wan.ipaddr='{WANIP}'
 set network.wan.netmask='{WANMASK}'
 set network.wan.gateway='{WANGATEWAY}'
 set system.ntp.enable_server='1'
-delete dhcp.@dnsmasq[0].server
 add_list dhcp.@dnsmasq[0].server="1.1.1.1"
 
 set talent.rule1=firewall_rule
