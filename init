@@ -12,7 +12,9 @@ tmp=$(mktemp -d "/tmp/talentwrt-init-XXXXXX")
 # shellcheck disable=2064
 trap "rm -r $tmp" EXIT
 
-alias _ssh='ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1'
+_ssh(){
+    ssh -q -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no root@192.168.1.1 $@
+}
 
 _ssh "if test -e /etc/sussy; then echo 'router already set up'; exit 1; fi" </dev/null
 
