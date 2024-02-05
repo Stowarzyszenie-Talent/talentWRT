@@ -5,8 +5,14 @@ set network.lan.proto='static'
 set network.lan.ipaddr='10.{NUMER}.0.1'
 set network.lan.netmask='255.0.0.0'
 set network.lan.dns='10.0.0.1'
+set network.lan.delegate='0'
 
 set dhcp.lan.ignore=1
+del dhcp.lan.ra
+del dhcp.lan.ra_slaac
+del dhcp.lan.ra_flags
+del dhcp.lan.dhcpv6
 
 del system.ntp.server
 add_list system.ntp.server='10.0.0.1'
+add_list dhcp.@dnsmasq[0].server="10.0.0.1"
