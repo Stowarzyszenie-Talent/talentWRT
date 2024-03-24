@@ -5,7 +5,7 @@ to Stowarzyszenie Talent's TP-link routers.
  
 An ``init`` script is provided for applying the template to a fresh (!) openWRT
 router. If a device already has the desired system, but has some leftover
-configuration, you can run something like ``first-boot && reboot now``.
+configuration, you can run something like ``firstboot && reboot now``.
 
 ## Additional setup for lo3
 
