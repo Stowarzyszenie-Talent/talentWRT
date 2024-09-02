@@ -38,7 +38,7 @@ set firewall.sus690.name='Allow Wyzwania, school sites and cppreference'
 set firewall.sus690.src='lan'
 set firewall.sus690.dest='wan'
 set firewall.sus690.target='ACCEPT'
-add_list firewall.sus690.dest_ip='195.201.46.207'
+add_list firewall.sus690.dest_ip='195.201.31.208'
 add_list firewall.sus690.dest_ip='195.164.224.189'
 add_list firewall.sus690.dest_ip='74.114.90.20'
 
