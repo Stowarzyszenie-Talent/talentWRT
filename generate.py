@@ -11,7 +11,7 @@ import re
 import shlex
 import argparse
 
-LUCI_APP_TALENT = Path("./luci-app-talent/luci-app-talent.ipk")
+LUCI_APP_TALENT = Path("./luci-app-talent/luci-app-talent.apk")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("output", type=argparse.FileType("w"))
@@ -257,8 +257,6 @@ def quote_for_echo(value: bytes) -> str:
     for byte in value:
         if byte in allowed:
             out += chr(byte)
-        elif byte == 0:
-            out += "\\0"
         else:
             out += f"\\x{hex(byte)[2:]:>02}"
     out += "'"
@@ -272,16 +270,16 @@ output.write("set -euo pipefail\n")
 
 if kind == "LO3":
     output.write(
-        f"echo -en {quote_for_echo(LUCI_APP_TALENT.read_bytes())} >/tmp/luci-app-talent.ipk\n"
+        f"echo -en {quote_for_echo(LUCI_APP_TALENT.read_bytes())} >/tmp/luci-app-talent.apk\n"
     )
-    output.write("opkg update\n") # Fetch package lists 
-    output.write("opkg install /tmp/luci-app-talent.ipk\n")
-    output.write("rm /tmp/luci-app-talent.ipk\n")
+    output.write("apk update\n") # Fetch package lists 
+    output.write("apk add --allow-untrusted /tmp/luci-app-talent.apk\n")
+    output.write("rm /tmp/luci-app-talent.apk\n")
     output.write("touch /etc/config/talent\n")
 
 if kind == "LTE":
-    output.write("opkg update\n")
-    output.write("opkg install luci-proto-qmi 464xlat\n")
+    output.write("apk update\n")
+    output.write("apk add luci-proto-qmi 464xlat\n")
 
 
 # We need to delete the cert for it to be recreated with our new defaults

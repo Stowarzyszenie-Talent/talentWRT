@@ -7,7 +7,7 @@ A package for OpenWRT that adds two UIs to LuCI:
 It was created for III LO in Gdynia, Poland.
 
 ### Some terms
- - opkg: the OpenWRT package manager, based on ipkg.
+ - apk: the Alpine Linux package manager, which is also used in OpenWRT since around 2025.
  - UCI: the Unified Configuration Interface, used by almost all of OpenWRT.
  - LuCI: OpenWRT's webUI written in Lua, mainly interacts with UCI.
  - fw: firewall.
@@ -20,20 +20,18 @@ It was created for III LO in Gdynia, Poland.
 
 ## Contents of this folder
 
-#### build.sh
-A simple script for packaging luci-app-talent into a .pkg file.
-The .pkg format is supposedly similar to .deb (I don't think either of us bothered to check).
+#### docker_build.sh
+A script for packaging luci-app-talent into an .apk file for distribution/installation.
+It uses docker and needs an internet connection, unfortunately.
 
-#### control/
-Additional files for packaging. The ones worth mentioning are:
+#### APKBUILD
+This file specifies how the package should be created.
+The `postinst` function is worth mentioning:
+it clears the luci cache and ensures that our UCI file exists.
 
- - control: package metadata. Note that dependencies are comma-separated.
- - postinst-pkg: we clear the luci cache here and ensure that our UCI file exists.
+The `model`, `controller` and `view` folders will be installed to `/usr/lib/lua/luci`.
 
-#### data/
-Files installed into the router's root directory.
-
-#### data/*/model/cbi/talent/{routers,rules}.lua
+#### model/cbi/talent/{routers,rules}.lua
 The cbi is for neatly generating a UI for managing some uci settings.
 
 In our case, we have UIs for all of our custom settings, which are:
@@ -46,7 +44,7 @@ In our case, we have UIs for all of our custom settings, which are:
  It is per-router, i.e. toggling router 1's fw from router 2 will
  enable/disable the rules specified in router 1's `talent.firewall_rule`.
 
-#### data/*/controller/talent/index.lua
+#### controller/talent/index.lua
 The HTTP endpoints added by the app are all defined here.
 
 The UI stuff:
@@ -76,7 +74,7 @@ The API endpoints, all returning JSON and with permissive CORS, are:
  - POST `firewall`: sets the state of all rules in `talent.firewall_rules`
      to the request parameter "state" which must be either "enabled" or "disabled".
 
-#### data/*/view/talent/firewall_control.htm
+#### view/talent/firewall_control.htm
 A view (template) for the firewall-toggling UI.
 It works as follows:
 

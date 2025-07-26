@@ -7,6 +7,15 @@ An ``init`` script is provided for applying the template to a fresh (!) openWRT
 router. If a device already has the desired system, but has some leftover
 configuration, you can run something like ``firstboot && reboot now``.
 
+## APK/OPKG issues
+OpenWRT should migrate to the APK (Alpine Linux) package manager in the next (2025?) release.
+It already happened in snapshots, but has yet to arrive in a release.
+
+So if an old router is used, one needs to either update it or
+revert to commit `76bfb0f`.
+
+##### TODO: support both opkg and apk.
+
 ## Additional setup for lo3
 
 - on computers that is supposed to access the firewall ui, exceptions for

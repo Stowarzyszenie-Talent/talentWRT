@@ -5,7 +5,9 @@ IFS=$'\t\n'
 
 cd "$(dirname "$0")"
 cd luci-app-talent
-./build.sh > /dev/null
+echo "Building luci-app-talent..."
+./docker_build.sh
+echo "Done."
 cd ..
 
 tmp=$(mktemp -d "/tmp/talentwrt-init-XXXXXX")

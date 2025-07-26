@@ -1,0 +1,38 @@
+# Contributor: Hubert Głuchowski <fishhh@fishhh.dev>
+# Maintainer: Olaf Targowski <me@otsrv.net>
+
+pkgname=luci-app-talent
+pkgver=1.0
+pkgrel=0
+pkgdesc="Talent LuCI application for e.g. user-friendly firewall toggling."
+url="https://github.com/Stowarzyszenie-Talent/talentWRT"
+arch="noarch"
+license="GPLv3"
+depends="luci-compat lua-sha2"
+makedepends=""
+install=""
+subpackages=""
+source=""
+
+build() {
+    return 0
+}
+
+check() {
+    return 0
+}
+
+package() {
+    for i in $(find controller model view -type f); do
+        echo "Copying $i..."
+        install -Dm755 $i "$pkgdir/usr/lib/lua/luci/$i"
+    done
+    echo "Done."
+}
+
+postinst() {
+    rm -f /tmp/luci-indexcache.*
+	rm -rf /tmp/luci-modulecache/
+	touch /etc/config/talent
+	killall -HUP rpcd 2>/dev/null
+}
