@@ -267,18 +267,18 @@ print(f"Writing script to {ns.output.name}")
 output: TextIO = ns.output
 
 output.write("set -euo pipefail\n")
+output.write("apk update\n") # Fetch package lists
+output.write("apk add luci luci-ssl\n")
 
 if kind == "LO3":
     output.write(
         f"echo -en {quote_for_echo(LUCI_APP_TALENT.read_bytes())} >/tmp/luci-app-talent.apk\n"
     )
-    output.write("apk update\n") # Fetch package lists 
     output.write("apk add --allow-untrusted /tmp/luci-app-talent.apk\n")
     output.write("rm /tmp/luci-app-talent.apk\n")
     output.write("touch /etc/config/talent\n")
 
 if kind == "LTE":
-    output.write("apk update\n")
     output.write("apk add luci-proto-qmi 464xlat\n")
 
 
