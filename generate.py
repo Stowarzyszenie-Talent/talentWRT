@@ -282,6 +282,9 @@ if kind == "LO3":
 if kind == "LTE":
     output.write("opkg update\n")
     output.write("opkg install luci-proto-qmi 464xlat\n")
+    # Enable proxy arp. It almost fully works: the router's other interfase can't be reached,
+    # but clients behind it can.
+    output.write("echo 'net.ipv4.conf.eth0/2.proxy_arp=1' > /etc/sysctl.d/69-proxy-arp.conf")
 
 
 # We need to delete the cert for it to be recreated with our new defaults
